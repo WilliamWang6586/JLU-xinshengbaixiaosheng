@@ -1,0 +1,48 @@
+# 吉林大学常用网站与资源清单
+
+> 来源：用户提供（2026-08）。部分网站需校园网或 VPN 才能打开（如智慧学工）。
+
+## 常用网站
+
+| 网站 | 地址 | 用途 |
+|------|------|------|
+| 吉大官网 | www.jlu.edu.cn | 学校主页 |
+| 教务管理系统 | https://iedu.jlu.edu.cn | 教务（课表/成绩/选课管理） |
+| 学生事务管理系统 | sais.jlu.edu.cn | 学生事务 |
+| 校内通知网 | oa.jlu.edu.cn | 校内通知 |
+| 校园卡平台 | dsf.jlu.edu.cn | 校园卡 |
+| 网络中心 | nic.jlu.edu.cn | 网络服务 |
+| 校园网自助营业厅 | ip.jlu.edu.cn | 校园网开户/缴费 |
+| 教务处 | eol.jlu.edu.cn | 教务处 |
+| 本科教学信息网 | jwc.jlu.edu.cn | 本科教学 |
+| 图书馆 | lib.jlu.edu.cn | 图书馆 |
+| 注册与考试中心 | registry.jlu.edu.cn | 注册/考试 |
+| 考试中心 | kszx.jlu.edu.cn | 考试 |
+| 学生工作部 | xsc.jlu.edu.cn | 学工 |
+| 勤工助学中心 | qgzx.jlu.edu.cn | 勤工助学 |
+| 招生办 | zsb.jlu.edu.cn | 招生 |
+| 选课系统 | http://icourses.jlu.edu.cn | 选课 |
+| 外网登录校园网 VPN | https://webvpn.jlu.edu.cn/login | VPN |
+| 智慧学工 | https://zhxg.jlu.edu.cn/xg/login | 智慧学工（需校园网/VPN） |
+
+## 校园网教程（微信公众号文章）
+- 如何开网: https://mp.weixin.qq.com/s/4p17CJDNEAuPWPIrnBFm-A
+- 校园网用处: https://mp.weixin.qq.com/s/0slDvaHl-deloALILZOTuA
+
+## 绩点/学分/保研概念
+- 绩点学分: https://mp.weixin.qq.com/s/b_gAI3wlDIrqaA_lZMUUDw
+- 保研: https://mp.weixin.qq.com/s/cyiAg5ZXsNW4SmyPCbPZuA
+
+## 交通学院（jt.jlu.edu.cn）细则实例
+- 交通学院官网: http://jt.jlu.edu.cn/
+- 本科生学年奖学金评选办法（2023）: http://jt.jlu.edu.cn/info/1062/6012.htm
+- 本科生奖学金评定净加减分实施办法（2023）: http://jt.jlu.edu.cn/info/1062/6010.htm
+- 推荐2024年优秀应届本科毕业生免试攻读研究生工作实施细则: http://jt.jlu.edu.cn/info/1062/5986.htm
+- 2023级本科生交通运输类专业分流工作实施细则: http://jt.jlu.edu.cn/info/1062/6249.htm
+
+## 说明
+- 用户要求：以后涉及吉大信息（教务/选课/校园网/奖学金/保研/分流）时，从这些网站搜索相关信息
+- 部分网站需校园网或 VPN（webvpn.jlu.edu.cn）访问
+
+
+学习通慕课答案互助文档(吉井解学整理): https://docs.qq.com/aio/DYkZSeFpjY1lOdGdC?p=am2RcOp8gCvIhFzskQVHcG&client_hint=0

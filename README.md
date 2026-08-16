@@ -47,6 +47,7 @@ jlu-baixiaosheng/
 │   ├── xueshu_all.txt         # 科研竞赛
 │   ├── shenghuo_all.txt       # 新生生活
 │   ├── xuanke_all.txt         # 选课互助（公选课/老师评价）
+│   ├── wangzhan_all.txt       # 吉大常用网站清单
 │   └── qita_all.txt           # 其他
 └── 吉林大学百晓生_v5.zip      # 完整技能包（一键安装）
 ```
