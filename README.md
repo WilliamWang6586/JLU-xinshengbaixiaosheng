@@ -47,7 +47,7 @@ https://xiaping.coze.com/skill/ff4601bb-28d7-4f45-82aa-f4621ca510a6
 
 **宿舍校园网**：20元/月/IP不限流量（2月7月免费）；上网账号=吉大邮箱账号+邮箱密码（不是学号！）；宿舍有线需登记网卡MAC、自动获取IP；同时在线上限1台PC+2台移动设备。
 
-**校园网访问 GitHub/Steam**：宿舍A类IP无国际出口——Steam 用 Watt Toolkit 的 Hosts 加速（勿开代理模式）；GitHub 用 `git config --global url."https://kgithub.com/".insteadOf "https://github.com/"` 走镜像，release 下载把 `github.com` 换成 `ghproxy.net`。
+**校园网访问 GitHub/Steam**：宿舍A类IP无国际出口——Steam 用 Watt Toolkit 的 Hosts 加速（勿开代理模式）；GitHub 用 **ghproxy.net 前缀法**：任何 `https://github.com/...` 链接前加 `https://ghproxy.net/`（如 `git clone https://ghproxy.net/https://github.com/用户/仓库.git`），Release/raw 同理。备选加速站 `gh-proxy.com`、`ghfast.top`（⚠️ kgithub.com 镜像已于 2026-09 失效）。
 
 **保研**：常规推免/专项计划/补偿名额/校际互推四途径；大一绩点英语→大二科研竞赛→大三论文夏令营→大四收获。
 

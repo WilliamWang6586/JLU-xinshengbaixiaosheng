@@ -91,12 +91,38 @@
 - 不要篡改网卡MAC地址，会直接断网
 - 校园网内禁止第三方VPN/代理/Clash/加速器，锐捷检测到虚拟网卡或系统代理会强制下线
 
-### 合规访问 Steam/GitHub 方案（实测）
+### 合规访问 Steam/GitHub 方案（2026-09-13 实测更新）
 1. Steam → Watt Toolkit（原Steam++）只开【Hosts加速】指向国内CDN，禁止开系统代理模式
-2. GitHub代码 → git config --global url."https://kgithub.com/".insteadOf "https://github.com/"（clone无感走镜像）
-3. GitHub Release下载 → 链接中 github.com 替换为 ghproxy.net
-4. 兜底 → 手机热点（仅小流量场景：clone、验证）
+2. GitHub → **ghproxy.net 前缀法**（任意 github 链接前加 `https://ghproxy.net/`）：
+   - clone：`git clone https://ghproxy.net/https://github.com/用户/仓库.git` ✅实测通过
+   - Release/raw：`https://ghproxy.net/https://github.com/.../releases/download/...`
+   - 备选加速站：gh-proxy.com、ghfast.top
+   - ⚠️ kgithub.com 镜像已失效（2026-09-13 实测超时），勿再使用
+   - ⚠️ ghproxy 只放行 github 域名，转发其他站点（如 arxiv）返回 403
+3. 兜底 → 手机热点（仅小流量场景：clone、验证）
 - ⚠️踩坑：Watt Toolkit 与本地代理软件（Clash等）不能同时开，会扰乱网络路径导致其他应用断连
+- ⚠️踩坑：arvix/V2EX/36kr 等境外站校园网直连不通，且无可用镜像（ghproxy 不放行）
+
+### 校园网资源实测可达清单（2026-09-13）
+**学术数据库（全部✅直连可达）**
+- 中国知网 https://www.cnki.net ｜ 万方 https://g.wanfangdata.com.cn
+- Web of Science **用 .cn 域名** https://webofscience.clarivate.cn（校内授权版）
+- 超星发现 https://zhizhen.com ｜ 维普期刊 https://qikan.cqvip.com（403是反爬，浏览器可开）｜ 维普考试 https://vers.cqvip.com
+- 超星图书馆 https://wisdom.chaoxing.com
+- ❌ PubMed（境外）不通 → 医学文献先用知网/万方替代
+
+**校内办事系统（全部✅直连可达）**
+- 办事大厅 https://ehall.jlu.edu.cn（一站式，教务入口在此）
+- 图书馆 https://lib.jlu.edu.cn ｜ 研究生管理 https://yjs.jlu.edu.cn ｜ 毕业论文提交 https://xwlw.jlu.edu.cn
+- 校内办公OA https://oa.jlu.edu.cn ｜ 国际交流 https://oge.jlu.edu.cn
+- 心理健康 https://xgpsy.jlu.edu.cn ｜ 教学质量评价 https://ievaluate.jlu.edu.cn
+- 创新创业 https://jdcxcy.jlu.edu.cn ｜ 开放创新实践 https://oep.jlu.edu.cn
+- 入党在线培训 10.100.66.31（内网IP，需校内网）
+- ❌ 地质仿真教学 vge.jlu.edu.cn 不通（可能限内网/实验室）
+
+**检索技巧**
+- 知网/万方从图书馆入口(lib.jlu.edu.cn)进更容易过校园IP授权
+- Web of Science 必须用 .cn 域名；301/302 是跳登录页属正常
 
 ### 常见故障排查
 1. JLU.PC认证超时/登录失败：关闭所有代理、VPN、虚拟网卡→重启客户端
