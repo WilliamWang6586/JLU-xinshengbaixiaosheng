@@ -78,3 +78,74 @@ Get-NetAdapter -Name '以太网 3' | Select LinkSpeed, MediaConnectionState
   - `以太网 3`（USB Realtek GbE，MAC `<有线网卡MAC>`）
   - 静态 `<示例IP>/24`，网关 `<示例IP>`，DNS `10.10.10.10` + `202.98.18.3`
   - Radmin VPN 虚拟网卡在启用状态
+
+---
+
+## 六、DRCOM 客户端频繁断线（"老是断链"）排查
+
+> 2026-10-01 实测。吉大认证客户端 = **DRCOM**（`C:\Drcom\DrUpdateClient\`，进程 `DrClient`/`DrMain`/`DrUpdate`），认证服务器 `auth.jlu.edu.cn` → **`10.100.61.3`**。
+
+### ⚠️ 第一原则：先分清「物理链路断」还是「认证会话断」
+
+**90% 的"断链"是认证会话掉（超时离线），不是网卡断。** 别一上来就查驱动/网线。
+
+只读分诊三连（都不改配置）：
+
+```powershell
+# 1) 到网关 + 到认证服务器 丢包率 —— 零丢包 = 物理链路好，问题在认证层
+ping -n 30 <示例IP>          # 有线网关
+ping -n 5  10.100.61.3             # DRCOM 认证服务器
+
+# 2) 看是否多网卡抢路由（关键！）
+Get-NetRoute -DestinationPrefix "0.0.0.0/0" | Sort-Object InterfaceMetric |
+    Select InterfaceAlias, NextHop, InterfaceMetric, RouteMetric
+
+# 3) 读客户端日志（真正的证据在这里）
+```
+
+**日志位置**：`C:\Drcom\DrUpdateClient\Log\`
+- `auth_log.txt` — 认证主日志（**会涨到十几万行/几 MB**，别整读，用 `Get-Content -Tail 200`）
+- `DrUpdate_Log<YYYYMMDD>.txt` / `DrClient_Log<YYYYMMDD>.txt` — 按天分的小日志
+
+### 日志里的关键判据
+
+| 日志行 | 含义 |
+|---|---|
+| `LGI STM <n> <bytes> ...` 每 20 秒一条、n 递增 | ✅ 心跳正常，会话活着 |
+| `ERR:连接认证服务器超时，您已经离线！` | 🔴 **会话被踢** —— 这是"断链"的实录 |
+| `Delete route for 10.100.61.3 ... faild! dwRetVal = 1168` | ⚠️ 客户端在删路由但**那条路由不存在**（1168 = ERROR_NOT_FOUND）→ 路由管理逻辑错乱 |
+| `route DELETE 10.100.61.3 ... <WiFi网段> IF 5` | 🔴 **按 WiFi 网关(<WiFi网段>)/WLAN 接口(IF 5) 删路由**，但 `Client Auth IP Address` 是**有线 IP** → **客户端把"认证网卡"和"路由管理网卡"搞混了** |
+| `ERR:pConfigRule is NULL!` | 噪声，每次都刷，**无害，别追** |
+
+### 根因：多网卡（有线+WiFi+VPN）并存 → DRCOM 路由管理选错网卡
+
+DRCOM 客户端检测到多张网卡时，会拿一张**过期快照**（上次登录时的网卡/网关）反复删路由，
+而实际认证走的是另一张网卡 → 错位累积 → 触发认证会话重置。
+
+**验证手法**：对比日志里 `Client Auth IP Address:`（实际认证网卡）和 `route DELETE ...` 行末尾的网关/接口号，**不一致即坐实**。
+另：日志开头的 `Host Address:` 列表常**只列出 WiFi/VPN 的 IP，漏掉有线 IP** —— 也是同一问题的旁证。
+
+### 处理顺序（从最小侵入开始，**每步都要用户点头**）
+
+1. **抬高非主用网卡的 metric**（可回滚，先做这个）
+   ```powershell
+   Set-NetIPInterface -InterfaceAlias "Radmin VPN" -InterfaceMetric 100
+   ```
+2. **给认证服务器钉静态路由**（精准，不动全局配置）
+   ```powershell
+   route -p add 10.100.61.3 mask 255.255.255.255 <示例IP> metric 1
+   ```
+3. **关掉多余网卡**（最可能根治，但要用户同意）
+   ```powershell
+   Disable-NetAdapter -Name "WLAN" -Confirm:$false    # 有线已通时 WiFi 纯属多余
+   ```
+4. 不需要 VPN 时 → **退出/卸载 VPN**（本次实测：卸了 Radmin 后默认路由回归有线，metric 35 < WiFi 45，但**断线未根治** → 说明元凶是多网卡本身而非某个 VPN）
+
+⚠️ 改网卡禁用/metric 都属于"动网络配置"，**必须先问用户**（见第五节铁律）。
+
+### ⚠️ 本会话踩的坑
+
+- **`Get-WinEvent -FilterHashtable @{...; ProviderName='...'}` 在部分机器上报 `The parameter is incorrect`** → 去掉 `ProviderName` 过滤，改为取回后 `Where-Object {$_.ProviderName -match ...}` 过滤
+- **`Get-Process` 拿到 `Path` 为空 = 进程以 SYSTEM/管理员权限运行**（正常权限读不到路径），**不代表进程不存在**；要查路径用 `Get-CimInstance Win32_Process`（可能同样被拒，那就直接找安装目录）
+- **终端里 `exit_code=1` 常常不是失败**：`Get-Process`/`Get-WinEvent` 过滤命中 0 条就返回非零，`ping` 成功也可能非零 —— **看输出内容判断，别只看 exit_code**（本次连续 6 次被误报"terminal has failed"，其实每条命令都成功执行了）
+- DRCOM 客户端里**长期存在**的 `ERR:pConfigRule is NULL!` 是红鲱鱼，别当线索追
