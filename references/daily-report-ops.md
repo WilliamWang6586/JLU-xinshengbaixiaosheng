@@ -1,8 +1,24 @@
 # 每日科技日报 · 运维要点（校园网直连时代）
 
 > 脚本：`<本地资料库>`（调度）+ `daily_tech_report_v2.py`（生成）
-> 调度：**Windows 任务计划程序**（不是 Hermes cron）——`Hermes每日科技日报` + `Hermes每日科技日报推送`，每天 18:30
+> 调度：**Windows 任务计划程序**（不是 Hermes cron）——`Hermes每日科技日报`，每天 18:30
 > 外置知识：记忆外置库 `详细知识\daily_report.md`
+
+## ⚠️ 目录重组后的连带修复清单（2026-10-18 实测）
+
+仓库重组把日报挪进 `03_工具与项目\` 时，光 `Move-Item` 会**静默打断**日报。必查四处：
+
+1. **`daily_tech_report_v2.py` 的 `OUTPUT_ROOT`** = `dirname(__file__)`，跟着脚本走，不用改；但 `assets/` 是相对它的 → 目录里**必须留 `assets/theme_*.jpg`**（5 张主题兜底图），否则每期都要联网重下、漏图就空板块。历史配图（2000+ 张、500MB）可以整批归档到 `_脚本存档\14_日报历史产物\`，只留 `theme_*`。
+2. **写死绝对路径的四处**：`daily_pipeline.ps1`（`$script`/`$qqfile`/`$out`）、`push_wechat.py`（`base` + 推文里的路径文案）、`账单识别\final_build.py`/`make_final.py`（`BASE` + 输出 xlsx 路径）。移动前先
+   `Select-String -Pattern 'Hermes文件库\\' -SimpleMatch -List` 扫一遍所有 `.py/.ps1/.bat`，命中就改。
+3. **Windows 定时任务**：`Get-ScheduledTask -TaskName 'Hermes每日科技日报'` 里 `Actions[0].Arguments` 存的是绝对路径，用
+   ```powershell
+   $t=Get-ScheduledTask -TaskName "Hermes每日科技日报"; $a=$t.Actions[0]
+   $a.Arguments=$a.Arguments.Replace("<旧路径>","<新路径>")
+   Set-ScheduledTask -TaskName "Hermes每日科技日报" -Action $a
+   ```
+   改完 `(Get-ScheduledTask ...).Actions[0].Arguments` 读回确认。**不改就明晚静默不跑**。
+4. **验证方式**：`importlib.util.spec_from_file_location` 加载 `daily_tech_report_v2.py`，断言 `OUTPUT_ROOT` 等于脚本所在目录 + `assets` 目录存在 + `THEME_POOL` 里的 `_fetch_theme` 可调用。缺 `theme_*.jpg` **不算失败**（会自动下载），别写死"缺图=冒烟失败"那种假判据。
 
 ## ⚠️ 代理策略（2026-09-13 改，旧版是坑）
 
