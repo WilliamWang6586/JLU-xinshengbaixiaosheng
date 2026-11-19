@@ -108,6 +108,15 @@ https://xiaping.coze.com/skill/ff4601bb-28d7-4f45-82aa-f4621ca510a6
 2. 放到你的 Agent 技能目录（如 Hermes 的 `hermes-home/skills/jlu-baixiaosheng/`），保持 `SKILL.md` 与 `references/` 同级
 3. 触发词：`吉林大学`、`吉大`、`转专业`、`培养方案`、`保研`、`分级考试`、`车辆工程`、`校园网`、`车队`、`纳新题`、`就业去向` 等
 
+### 方式三：DeepSeek Harness 插件（DSH 用户推荐）
+
+同一套知识库已打包成 DSH 运行时技能插件 **dsh-jlu-baixiaosheng**（npm 同名，已上架）：
+
+- 插件仓库：[github.com/WilliamWang6586/dsh-jlu-baixiaosheng](https://github.com/WilliamWang6586/dsh-jlu-baixiaosheng)（已作为 submodule 挂在本仓库 `dsh-jlu-baixiaosheng/` 目录下）
+- npm 包页：[npmjs.com/package/dsh-jlu-baixiaosheng](https://www.npmjs.com/package/dsh-jlu-baixiaosheng)
+- DSH 桌面端「设置 → 插件 → 插件终端」执行 `pnpm add dsh-jlu-baixiaosheng`，重启后技能目录出现 `jlu-baixiaosheng` 即生效
+- 插件与主线知识库版本同步（当前均为 1.7.4），内容一致，只是分发形态不同
+
 ---
 
 ## 🎯 高频问题速查
@@ -138,10 +147,11 @@ https://xiaping.coze.com/skill/ff4601bb-28d7-4f45-82aa-f4621ca510a6
 JLU-xinshengbaixiaosheng/
 ├── SKILL.md                      # 技能入口（触发词 / 使用方法 / 高频问答速查）
 ├── README.md
-└── references/                   # 知识库（UTF-8 文本，文件名全 ASCII）
-    ├── *_all.txt        × 12    # 原始文档库：官方文件 + 经验全文合并
-    │                             #   （内含 "--- 第N页 ---" 分页标记）
-    └── *.md             × 26    # 结构化专题：结论先行，优先阅读
+├── references/                   # 知识库（UTF-8 文本，文件名全 ASCII）
+│   ├── *_all.txt        × 12    # 原始文档库：官方文件 + 经验全文合并
+│   │                             #   （内含 "--- 第N页 ---" 分页标记）
+│   └── *.md             × 26    # 结构化专题：结论先行，优先阅读
+└── dsh-jlu-baixiaosheng/         # submodule → DSH 插件仓库（npm 同名包）
 ```
 
 > 大文件读取建议：先用关键词搜索定位，再分页读取（`*_all.txt` 内含 `--- 第N页 ---` 分页标记；单个文件内用 `===== 来源文件: xxx =====` 分隔原始文档）。
